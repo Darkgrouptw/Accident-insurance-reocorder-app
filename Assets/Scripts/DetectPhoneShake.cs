@@ -30,6 +30,6 @@ public class DetectPhoneShake : MonoBehaviour
         Vector3 deltaAcceleration = acceleration - lowPassValue;
 
         if (deltaAcceleration.sqrMagnitude >= shakeDetectionThreshold)
-            DebugText.text += "Shake => " + deltaAcceleration.sqrMagnitude;
+            DebugText.text = "Shake => " + deltaAcceleration.sqrMagnitude +"\n" + DebugText.text;
     }
 }
