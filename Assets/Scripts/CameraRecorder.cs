@@ -51,7 +51,9 @@ public class CameraRecorder : MonoBehaviour
 			textureTemp.Apply ();
 
 			byte[] dataArray = textureTemp.EncodeToPNG();
-			System.IO.File.WriteAllBytes(FinalPath + "/" + CountSaveIndex + ".png", dataArray);
+			string OutputName = FinalPath + "/";
+			OutputName += string.Format ("{0:0000}", CountSaveIndex);
+			System.IO.File.WriteAllBytes(OutputName + ".jpeg", dataArray);
 
 			CountSaveIndex++;
 			if (CountSaveIndex > MaxPictureCount) 
