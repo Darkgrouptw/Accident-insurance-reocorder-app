@@ -9,12 +9,14 @@ public class CameraRecorder : MonoBehaviour
     public string FolderName = "Recorder";
     private WebCamTexture recorder;
     public RawImage image;
+    private int CountSaveIndex = 0;
 
     private void Start()
     {
         // 創建目錄
-        if (!System.IO.Directory.Exists(FolderName))
-            System.IO.Directory.CreateDirectory(FolderName);
+        if (!System.IO.Directory.Exists(Application.persistentDataPath + "/" + FolderName))
+            System.IO.Directory.CreateDirectory(Application.persistentDataPath + "/" + FolderName);
+        Debug.Log(Application.persistentDataPath + "/" + FolderName);
 
         // 創建 Texture
         recorder = new WebCamTexture();
@@ -24,6 +26,11 @@ public class CameraRecorder : MonoBehaviour
 
     private void Update()
     {
-
+        //while(recorder.isPlaying)
+        //{
+        //    //recorder
+        //    tex
+        //    CountSaveIndex++;
+        //}
     }
 }
