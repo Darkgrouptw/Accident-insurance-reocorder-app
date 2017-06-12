@@ -61,6 +61,7 @@ public class CameraRecorder : MonoBehaviour
 				IsRepeat = true;
 				CountSaveIndex = 0;
 			}
+			Debug.Log (CountSaveIndex);
 
 			// 原來這條就解決了ＸＤ
 			Destroy (textureTemp);
@@ -68,14 +69,29 @@ public class CameraRecorder : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// 當搖晃的時候會取消錄影
+	/// </summary>
 	public void StopRecord()
 	{
 		if (recorder.isPlaying) 
 		{
 			Panel.SetActive (true);
-			//StopCoroutine (RecordCoroutine);
-			StopCoroutine (RecordEvent ());
+			recorder.Stop ();
+			StopCoroutine (RecordCoroutine);
 		}
 	}
 
+	/// <summary>
+	/// 當按下取消，發現誤判的時候，才繼續錄影
+	/// </summary>
+	public void StartRecord()
+	{
+		if (!recorder.isPlaying) 
+		{
+			Panel.SetActive (false);
+			recorder.Play ();
+			RecordCoroutine = StartCoroutine (RecordEvent());
+		}
+	}
 }
