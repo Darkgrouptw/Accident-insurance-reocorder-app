@@ -6,7 +6,9 @@ using UnityEngine.UI;
 public class CameraRecorder : MonoBehaviour
 {
     [Header("========== 錄影相關 ==========")]
-    public string FolderName = "Recorder";
+    public string FolderName = "Recorder";          // 資料夾的
+    private string FinalPath;                       // 最後存檔的路徑
+
     private WebCamTexture recorder;
     public RawImage image;
     private int CountSaveIndex = 0;
@@ -16,7 +18,8 @@ public class CameraRecorder : MonoBehaviour
         // 創建目錄
         if (!System.IO.Directory.Exists(Application.persistentDataPath + "/" + FolderName))
             System.IO.Directory.CreateDirectory(Application.persistentDataPath + "/" + FolderName);
-        Debug.Log(Application.persistentDataPath + "/" + FolderName);
+        FinalPath = Application.persistentDataPath + "/" + FolderName + "/";
+        Debug.Log("SavePath => " + FinalPath);
 
         // 創建 Texture
         recorder = new WebCamTexture();
@@ -26,11 +29,14 @@ public class CameraRecorder : MonoBehaviour
 
     private void Update()
     {
-        //while(recorder.isPlaying)
-        //{
-        //    //recorder
-        //    tex
-        //    CountSaveIndex++;
-        //}
+        while(recorder.isPlaying)
+        {
+            // 錄影
+            Texture2D textureTemp = (Texture2D)image.texture;
+            byte[] dataArray = textureTemp.EncodeToPNG();
+            System.IO.File.WriteAllBytes(FinalPath + "/" + CountSaveIndex + ".png", dataArray);
+
+            CountSaveIndex++;
+        }
     }
 }
