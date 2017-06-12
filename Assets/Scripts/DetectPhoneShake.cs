@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(CameraRecorder))]
 public class DetectPhoneShake : MonoBehaviour
 {
     [Header("========== 偵測手機震動參數 ==========")]
-    public Text DebugText;
-
-
     public float accelerometerUpdateInterval = 1.0f / 60.0f;
     public float lowPassKernelWidthInSeconds = 1.0f;
     public float shakeDetectionThreshold = 2.7f;
@@ -32,6 +30,7 @@ public class DetectPhoneShake : MonoBehaviour
 		if (deltaAcceleration.sqrMagnitude >= shakeDetectionThreshold) 
 		{
 			Debug.Log("Shake => " + deltaAcceleration.sqrMagnitude);
+			this.GetComponent<CameraRecorder> ().StopRecord ();
 		}
     }
 }
