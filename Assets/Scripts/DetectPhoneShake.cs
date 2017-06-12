@@ -11,9 +11,9 @@ public class DetectPhoneShake : MonoBehaviour
 
     public float accelerometerUpdateInterval = 1.0f / 60.0f;
     public float lowPassKernelWidthInSeconds = 1.0f;
-    public float shakeDetectionThreshold = 2.0f;
+    public float shakeDetectionThreshold = 2.7f;
 
-    public float lowPassFilterFactor;
+    private float lowPassFilterFactor;
     private Vector3 lowPassValue;
 
     private void Start()
