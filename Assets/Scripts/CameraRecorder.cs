@@ -11,6 +11,8 @@ public class CameraRecorder : MonoBehaviour
 
     private WebCamTexture recorder;
     public RawImage image;
+	public int frameNumber = 25;
+	public int MaxPictureCount = 10000;
     private int CountSaveIndex = 0;
 
     private void Start()
@@ -22,21 +24,31 @@ public class CameraRecorder : MonoBehaviour
         Debug.Log("SavePath => " + FinalPath);
 
         // 創建 Texture
-        recorder = new WebCamTexture();
+		recorder = new WebCamTexture(Screen.height / 4, Screen.width / 4);
         image.texture = recorder;
         recorder.Play();
+
+		StartCoroutine(RecordEvent());
     }
 
-    private void Update()
-    {
-        while(recorder.isPlaying)
-        {
-            // 錄影
-            Texture2D textureTemp = (Texture2D)image.texture;
-            byte[] dataArray = textureTemp.EncodeToPNG();
-            System.IO.File.WriteAllBytes(FinalPath + "/" + CountSaveIndex + ".png", dataArray);
+	private IEnumerator RecordEvent()
+	{
+		while (true) 
+		{
+			System.GC.Collect();
+			Texture2D textureTemp = new Texture2D(recorder.width, recorder.height);
+			textureTemp.SetPixels (recorder.GetPixels ());
+			textureTemp.Apply ();
 
-            CountSaveIndex++;
-        }
-    }
+			byte[] dataArray = textureTemp.EncodeToPNG();
+			System.IO.File.WriteAllBytes(FinalPath + "/" + CountSaveIndex + ".png", dataArray);
+
+			CountSaveIndex++;
+			if (CountSaveIndex > MaxPictureCount)
+				CountSaveIndex = 0;
+
+			yield return new WaitForSeconds (1.0f / frameNumber);
+		}
+
+	}
 }

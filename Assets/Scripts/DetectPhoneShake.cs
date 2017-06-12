@@ -29,7 +29,9 @@ public class DetectPhoneShake : MonoBehaviour
         lowPassValue = Vector3.Lerp(lowPassValue, acceleration, lowPassFilterFactor);
         Vector3 deltaAcceleration = acceleration - lowPassValue;
 
-        if (deltaAcceleration.sqrMagnitude >= shakeDetectionThreshold)
-            DebugText.text = "Shake => " + deltaAcceleration.sqrMagnitude +"\n" + DebugText.text;
+		if (deltaAcceleration.sqrMagnitude >= shakeDetectionThreshold) 
+		{
+			Debug.Log("Shake => " + deltaAcceleration.sqrMagnitude);
+		}
     }
 }
