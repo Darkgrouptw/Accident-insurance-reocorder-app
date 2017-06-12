@@ -10,7 +10,7 @@ public class CameraRecorder : MonoBehaviour
     private WebCamTexture recorder;
     public RawImage image;
 
-    private void Start()
+    private IEnumerable Start()
     {
         // 創建目錄
         if (!System.IO.Directory.Exists(FolderName))
@@ -20,6 +20,8 @@ public class CameraRecorder : MonoBehaviour
         recorder = new WebCamTexture();
         image.texture = recorder;
         recorder.Play();
+
+        yield return Application.RequestUserAuthorization(UserAuthorization.WebCam | UserAuthorization.Microphone);
     }
 
     private void Update()
