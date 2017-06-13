@@ -4,8 +4,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SceneChange : MonoBehaviour {
-	public void RecordToConvert()
+    
+    public void RecordToConvert()
 	{
-		SceneManager.LoadSceneAsync (1);
+		SceneManager.LoadSceneAsync (3);
 	}
 }
