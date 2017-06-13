@@ -6,10 +6,6 @@ public class GPSLocationManager : MonoBehaviour
 {
     private IEnumerator Start()
     {
-        // 先確定定位能不能用
-        if (!Input.location.isEnabledByUser)
-            yield break;
-
         // 開始定位
         Input.location.Start();
 
@@ -46,7 +42,8 @@ public class GPSLocationManager : MonoBehaviour
             {
                 PlayerPrefs.SetFloat("lat", Input.location.lastData.latitude);
                 PlayerPrefs.SetFloat("long", Input.location.lastData.longitude);
-                yield return new WaitForSeconds(5);
+				Debug.Log ("Location => " + Input.location.lastData.latitude + "," + Input.location.lastData.longitude);
+                yield return new WaitForSeconds(20);
             }
         }
     }
