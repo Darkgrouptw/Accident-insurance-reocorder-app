@@ -7,15 +7,15 @@ using UnityEngine.UI;
 public class CameraRecorder : MonoBehaviour
 {
     [Header("========== 錄影相關 ==========")]
-    public string FolderName = "Recorder";          // 資料夾的
+    public static string FolderName = "Recorder";   // 資料夾的
     private string FinalPath;                       // 最後存檔的路徑
 	public GameObject Panel;						// 警告視窗
 
-    private WebCamTexture recorder;					// 錄影的貼圖
+    private WebCamTexture recorder;                 // 錄影的貼圖
 
-	public RawImage image;							// 顯示的圖片
-	public int frameNumber = 25;					// 每一個 Frame 的數目
-	public int MaxPictureCount = 10000;				// 存最大的上限
+    public RawImage image;							// 顯示的圖片
+    public static int MaxPictureCount = 10000;      // 存最大的上限
+    public int frameNumber = 25;					// 每一個 Frame 的數目
 
 	private bool IsRepeat = false;
     private int CountSaveIndex = 0;
@@ -35,7 +35,13 @@ public class CameraRecorder : MonoBehaviour
         image.texture = recorder;
         recorder.Play();
 
-		RecordCoroutine = StartCoroutine(RecordEvent());
+        if(recorder.isPlaying)
+		    RecordCoroutine = StartCoroutine(RecordEvent());
+
+        // 清空狀態
+        PlayerPrefs.SetInt("CountSaveIndex", 0);
+        PlayerPrefs.SetInt("IsRepeat", 0);
+        PlayerPrefs.Save();
     }
 
 	private IEnumerator RecordEvent()
@@ -61,23 +67,30 @@ public class CameraRecorder : MonoBehaviour
 				IsRepeat = true;
 				CountSaveIndex = 0;
 			}
-			Debug.Log (CountSaveIndex);
 
 			// 原來這條就解決了ＸＤ
 			Destroy (textureTemp);
 			yield return new WaitForSeconds (1.0f / frameNumber);
 		}
 	}
+    private void OnDisable()
+    {
+        recorder.Stop();
 
-	/// <summary>
-	/// 當搖晃的時候會取消錄影
-	/// </summary>
-	public void StopRecord()
+        // 存狀態
+        PlayerPrefs.SetInt("CountSaveIndex", CountSaveIndex);
+        PlayerPrefs.SetInt("IsRepeat", (IsRepeat) ? 1 : 0);
+        PlayerPrefs.Save();
+    }
+
+    /// <summary>
+    /// 當搖晃的時候會取消錄影
+    /// </summary>
+    public void StopRecord()
 	{
 		if (recorder.isPlaying) 
 		{
-			Panel.SetActive (true);
-			recorder.Stop ();
+            Panel.SetActive(true);
 			StopCoroutine (RecordCoroutine);
 		}
 	}
