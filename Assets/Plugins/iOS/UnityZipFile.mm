@@ -29,10 +29,7 @@ extern "C"{
         }
         
         [zip CloseZipFile2];
-        [zip release];
-        
         [list removeAllObjects];
-        [list release];
         list = nil;
     }
     
@@ -58,6 +55,5 @@ extern "C"{
             [zip UnzipCloseFile];
         }
         [zip CloseZipFile2];
-        [zip release];
     }
 }

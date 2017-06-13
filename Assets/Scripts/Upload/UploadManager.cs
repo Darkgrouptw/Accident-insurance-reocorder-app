@@ -40,15 +40,15 @@ public class UploadManager : MonoBehaviour
             int HandleIndex = 0;
             for (int i = StartIndex; i < CameraRecorder.MaxPictureCount; i++)
             {
-                string OrgFormatIndex = string.Format("0:0000", i);
-                string NewFormatIndex = string.Format("0:0000", HandleIndex);
+                string OrgFormatIndex = string.Format("{0:0000}", i);
+                string NewFormatIndex = string.Format("{0:0000}", HandleIndex);
                 File.Move(FinalPath + OrgFormatIndex + ".png", FinalPath + "Temp/" + NewFormatIndex + ".png");
                 ZipFileList.Add(FinalPath + "Temp/" + NewFormatIndex + ".png");
             }
             for (int i = 0; i < StartIndex; i++)
             {
-                string OrgFormatIndex = string.Format("0:0000", i);
-                string NewFormatIndex = string.Format("0:0000", HandleIndex);
+                string OrgFormatIndex = string.Format("{0:0000}", i);
+                string NewFormatIndex = string.Format("{0:0000}", HandleIndex);
                 File.Move(FinalPath + OrgFormatIndex + ".png", FinalPath + "Temp/" + NewFormatIndex + ".png");
                 ZipFileList.Add(FinalPath + "Temp/" + NewFormatIndex + ".png");
             }
