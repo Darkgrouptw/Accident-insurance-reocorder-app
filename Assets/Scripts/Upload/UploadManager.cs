@@ -42,32 +42,35 @@ public class UploadManager : MonoBehaviour
             {
                 string OrgFormatIndex = string.Format("{0:0000}", i);
                 string NewFormatIndex = string.Format("{0:0000}", HandleIndex);
-                File.Move(FinalPath + OrgFormatIndex + ".png", FinalPath + "Temp/" + NewFormatIndex + ".png");
-                ZipFileList.Add(FinalPath + "Temp/" + NewFormatIndex + ".png");
+				File.Move(FinalPath + OrgFormatIndex + ".jpeg", FinalPath + "Temp/" + NewFormatIndex + ".jpeg");
+				ZipFileList.Add (FinalPath + "Temp/" + NewFormatIndex + ".jpeg");
+				HandleIndex++;
             }
             for (int i = 0; i < StartIndex; i++)
             {
                 string OrgFormatIndex = string.Format("{0:0000}", i);
                 string NewFormatIndex = string.Format("{0:0000}", HandleIndex);
-                File.Move(FinalPath + OrgFormatIndex + ".png", FinalPath + "Temp/" + NewFormatIndex + ".png");
-                ZipFileList.Add(FinalPath + "Temp/" + NewFormatIndex + ".png");
+				File.Move(FinalPath + OrgFormatIndex + ".png", FinalPath + "Temp/" + NewFormatIndex + ".jpeg");
+				ZipFileList.Add(FinalPath + "Temp/" + NewFormatIndex + ".jpeg");
+				HandleIndex++;
             }
         }
         else
         {
             int HandleIndex = 0;
-            for (int i = 0; i <= EndIndex; i++)
+            for (int i = 0; i < EndIndex; i++)
             {
-                string OrgFormatIndex = string.Format("0:0000", i);
-                string NewFormatIndex = string.Format("0:0000", HandleIndex);
-                File.Move(FinalPath + OrgFormatIndex + ".png", FinalPath + "Temp/" + NewFormatIndex + ".png");
-                ZipFileList.Add(FinalPath + "Temp/" + NewFormatIndex + ".png");
+				string OrgFormatIndex = string.Format("{0:0000}", i);
+				string NewFormatIndex = string.Format("{0:0000}", HandleIndex);
+				File.Move(FinalPath + OrgFormatIndex + ".jpeg", FinalPath + "Temp/" + NewFormatIndex + ".jpeg");
+				ZipFileList.Add(FinalPath + "Temp/" + NewFormatIndex + ".jpeg");
+				HandleIndex++;
             }
         }
         Status.text = "Zip file";
 
         // 壓縮
-        string exportZipPath = FinalPath + "Temp/test.zip";
+        string exportZipPath = FinalPath + "Temp/Video.zip";
         ZipUtil.Zip(exportZipPath, ZipFileList.ToArray());
         Status.text = "Zip Complete\n" + Status.text;
 
