@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Networking;
 
 
@@ -8,9 +9,17 @@ public class GPSLocationManager : MonoBehaviour
 {
     [Header("========== GPS 記錄相關 ==========")]
     public string URL = "http://140.118.9.179/userLocation/";
-    
+
+    public RawImage LoadingTexture;
+    public MovieTexture LoadingMovie;
+
     private void Start()
     {
+        // Loading 的圖片
+        LoadingTexture.texture = LoadingMovie;
+        LoadingMovie.loop = true;
+        LoadingMovie.Play();
+
         StartCoroutine(GPSRecord());
     }
 
@@ -102,6 +111,11 @@ public class GPSLocationManager : MonoBehaviour
         {
             // 切開:
             string[] DataPart = DataSplit[i].Split(':');
+            if(DataPart[0] == "helpID")
+            {
+                DataList.Add(DataPart[0], DataPart[2]);
+                break;
+            }
             DataList.Add(DataPart[0], DataPart[1]);
         }
         return DataList;
