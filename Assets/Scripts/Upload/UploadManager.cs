@@ -42,7 +42,7 @@ public class UploadManager : MonoBehaviour
             {
                 string OrgFormatIndex = string.Format("{0:0000}", i);
                 string NewFormatIndex = string.Format("{0:0000}", HandleIndex);
-				File.Move(FinalPath + OrgFormatIndex + ".jpeg", FinalPath + "Temp/" + NewFormatIndex + ".jpeg");
+				File.Move(FinalPath + OrgFormatIndex + ".jpg", FinalPath + "Temp/" + NewFormatIndex + ".jpg");
 				ZipFileList.Add (FinalPath + "Temp/" + NewFormatIndex + ".jpeg");
 				HandleIndex++;
             }
@@ -50,7 +50,7 @@ public class UploadManager : MonoBehaviour
             {
                 string OrgFormatIndex = string.Format("{0:0000}", i);
                 string NewFormatIndex = string.Format("{0:0000}", HandleIndex);
-				File.Move(FinalPath + OrgFormatIndex + ".png", FinalPath + "Temp/" + NewFormatIndex + ".jpeg");
+				File.Move(FinalPath + OrgFormatIndex + ".jpg", FinalPath + "Temp/" + NewFormatIndex + ".jpg");
 				ZipFileList.Add(FinalPath + "Temp/" + NewFormatIndex + ".jpeg");
 				HandleIndex++;
             }
@@ -62,7 +62,7 @@ public class UploadManager : MonoBehaviour
             {
 				string OrgFormatIndex = string.Format("{0:0000}", i);
 				string NewFormatIndex = string.Format("{0:0000}", HandleIndex);
-				File.Move(FinalPath + OrgFormatIndex + ".jpeg", FinalPath + "Temp/" + NewFormatIndex + ".jpeg");
+				File.Move(FinalPath + OrgFormatIndex + ".jpg", FinalPath + "Temp/" + NewFormatIndex + ".jpg");
 				ZipFileList.Add(FinalPath + "Temp/" + NewFormatIndex + ".jpeg");
 				HandleIndex++;
             }
@@ -74,17 +74,39 @@ public class UploadManager : MonoBehaviour
         ZipUtil.Zip(exportZipPath, ZipFileList.ToArray());
         Status.text = "Zip Complete\n" + Status.text;
 
-        // 定位資料
+        // 產生保單的 txt
+        string PolicyData = "";
+        string PolicyFileName = FinalPath + "Temp/policy.txt";
+        PolicyData += "被保人：" + PlayerPrefs.GetString("Name") + "\n";
+        PolicyData += "要保人：" + PlayerPrefs.GetString("Name1") + "\n";
+        PolicyData += "身分證號：" + PlayerPrefs.GetString("NID") + "\n";
+        PolicyData += "車牌：" + PlayerPrefs.GetString("CarInfoField") + "\n";
+        PolicyData += "險種：" + PlayerPrefs.GetString("PolicyTypeField") + "\n";
+        File.WriteAllText(PolicyFileName, PolicyData);
+
+        // 上傳資訊
+        string ID = PlayerPrefs.GetString("NID");
         float latData = PlayerPrefs.GetFloat("lat");
-        float longData = PlayerPrefs.GetFloat("long"); 
-        //StartCoroutine(UploadFile());
+        float longData = PlayerPrefs.GetFloat("long");
+        StartCoroutine(UploadFile(ID, latData, longData, exportZipPath, PolicyFileName));
     }
 
 
-    //IEnumerator UploadFile()
-    //{
-    //    // 新的 Web request 機制
-    //    List<IMultipartFormSection> FormData = new List<IMultipartFormSection>();
-    //    FormData.Add(new MultipartFormDataSection(""))
-    //}
+    IEnumerator UploadFile(string ID, float latData, float longData, string ZipFileName, string PolicyFileName)
+    {
+        byte[] ZipFileData = File.ReadAllBytes(ZipFileName);
+        byte[] PolicyData = File.ReadAllBytes(PolicyFileName);
+
+        // 新的 Web request 機制
+        WWWForm FormData = new WWWForm();
+        FormData.AddField("userID", ID);
+        FormData.AddField("lat", latData.ToString());
+        FormData.AddField("lng", longData.ToString());
+        FormData.AddBinaryData("Video.zip", ZipFileData);
+        FormData.AddBinaryData("PolicyData.txt", PolicyData);
+
+        UnityWebRequest req = UnityWebRequest.Post(URL, FormData);
+        yield return req.Send();
+        Debug.Log(req.downloadHandler.text);
+    }
 }

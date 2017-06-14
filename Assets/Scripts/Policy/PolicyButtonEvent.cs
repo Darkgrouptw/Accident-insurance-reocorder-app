@@ -31,7 +31,11 @@ public class PolicyButtonEvent : MonoBehaviour
         if (NameField.text != "" && NIDField.text != "")
         {
             PlayerPrefs.SetString("Name", NameField.text);
+            PlayerPrefs.SetString("Name1", NameField1.text);
             PlayerPrefs.SetString("NID", NIDField.text);
+            PlayerPrefs.SetString("CarInfoField", CarInfoField.text);
+            PlayerPrefs.SetString("PolicyTypeField", PolicyTypeField.text);
+
             SceneManager.LoadSceneAsync (2);
         }
     }

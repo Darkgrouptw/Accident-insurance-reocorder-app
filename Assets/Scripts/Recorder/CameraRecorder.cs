@@ -59,7 +59,7 @@ public class CameraRecorder : MonoBehaviour
 			byte[] dataArray = textureTemp.EncodeToPNG();
 			string OutputName = FinalPath + "/";
 			OutputName += string.Format ("{0:0000}", CountSaveIndex);
-			System.IO.File.WriteAllBytes(OutputName + ".jpeg", dataArray);
+			System.IO.File.WriteAllBytes(OutputName + ".jpg", dataArray);
 
 			CountSaveIndex++;
 			if (CountSaveIndex > MaxPictureCount) 
@@ -100,11 +100,7 @@ public class CameraRecorder : MonoBehaviour
 	/// </summary>
 	public void StartRecord()
 	{
-		if (!recorder.isPlaying) 
-		{
-			Panel.SetActive (false);
-			recorder.Play ();
-			RecordCoroutine = StartCoroutine (RecordEvent());
-		}
+		Panel.SetActive (false);
+		RecordCoroutine = StartCoroutine (RecordEvent());
 	}
 }
