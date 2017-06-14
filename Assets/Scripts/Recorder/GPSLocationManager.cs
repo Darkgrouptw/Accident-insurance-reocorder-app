@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+
 public class GPSLocationManager : MonoBehaviour
 {
     [Header("========== GPS 記錄相關 ==========")]
     public string URL = "http://140.118.9.179/userLocation/";
-
+    
     private void Start()
     {
         StartCoroutine(GPSRecord());
@@ -67,14 +68,43 @@ public class GPSLocationManager : MonoBehaviour
                 req.Send();
 
 				// 要讓他結束後才跑
-				while (!req.isDone) {
+				while (!req.isDone)
+                {
 					yield return new WaitForSeconds (0.1f);
 				};
-                Debug.Log(req.downloadHandler.text);
+                Dictionary<string, string> DataList = JsonParser(req.downloadHandler.text);
+                if(DataList["help"] == "true")
+                {
+                    // 發現有人需要幫忙，要傳送影片，先顯示視窗
+                    Debug.Log("HelpID => " + DataList["helpID"]);
+                    
+                }
 
                 yield return new WaitForSeconds(20);
             }
         }
+    }
+
+    private Dictionary<string, string> JsonParser(string Data)
+    {
+        Dictionary<string, string> DataList = new Dictionary<string, string>();
+
+        // 刪掉垃圾
+        Data = Data.Replace("[", "");
+        Data = Data.Replace("{", "");
+        Data = Data.Replace("}", "");
+        Data = Data.Replace("]", "");
+        Data = Data.Replace("\"", "");
+        Debug.Log("Data => " + Data);
+
+        string[] DataSplit = Data.Split(',');
+        for(int i = 0; i < DataSplit.Length; i++)
+        {
+            // 切開:
+            string[] DataPart = DataSplit[i].Split(':');
+            DataList.Add(DataPart[0], DataPart[1]);
+        }
+        return DataList;
     }
 
     private void OnDisable()
