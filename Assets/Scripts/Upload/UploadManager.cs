@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 public class UploadManager : MonoBehaviour
 {
     [Header("========== 上傳的功能 ==========")]
-    public string URL = "http://140.118.9.179/";
+    public string URL = "http://140.118.9.179/newEvents/";
     private string FinalPath;
 
     [Header("========== 測試的 UI ==========")]
@@ -43,7 +43,7 @@ public class UploadManager : MonoBehaviour
                 string OrgFormatIndex = string.Format("{0:0000}", i);
                 string NewFormatIndex = string.Format("{0:0000}", HandleIndex);
 				File.Move(FinalPath + OrgFormatIndex + ".jpg", FinalPath + "Temp/" + NewFormatIndex + ".jpg");
-				ZipFileList.Add (FinalPath + "Temp/" + NewFormatIndex + ".jpeg");
+				ZipFileList.Add (FinalPath + "Temp/" + NewFormatIndex + ".jpg");
 				HandleIndex++;
             }
             for (int i = 0; i < StartIndex; i++)
@@ -51,7 +51,7 @@ public class UploadManager : MonoBehaviour
                 string OrgFormatIndex = string.Format("{0:0000}", i);
                 string NewFormatIndex = string.Format("{0:0000}", HandleIndex);
 				File.Move(FinalPath + OrgFormatIndex + ".jpg", FinalPath + "Temp/" + NewFormatIndex + ".jpg");
-				ZipFileList.Add(FinalPath + "Temp/" + NewFormatIndex + ".jpeg");
+				ZipFileList.Add(FinalPath + "Temp/" + NewFormatIndex + ".jpg");
 				HandleIndex++;
             }
         }
@@ -63,7 +63,7 @@ public class UploadManager : MonoBehaviour
 				string OrgFormatIndex = string.Format("{0:0000}", i);
 				string NewFormatIndex = string.Format("{0:0000}", HandleIndex);
 				File.Move(FinalPath + OrgFormatIndex + ".jpg", FinalPath + "Temp/" + NewFormatIndex + ".jpg");
-				ZipFileList.Add(FinalPath + "Temp/" + NewFormatIndex + ".jpeg");
+				ZipFileList.Add(FinalPath + "Temp/" + NewFormatIndex + ".jpg");
 				HandleIndex++;
             }
         }
@@ -96,6 +96,7 @@ public class UploadManager : MonoBehaviour
     {
         byte[] ZipFileData = File.ReadAllBytes(ZipFileName);
         byte[] PolicyData = File.ReadAllBytes(PolicyFileName);
+		Debug.Log ("Size =>" + ZipFileData.Length);
 
         // 新的 Web request 機制
         WWWForm FormData = new WWWForm();
@@ -106,7 +107,14 @@ public class UploadManager : MonoBehaviour
         FormData.AddBinaryData("PolicyData.txt", PolicyData);
 
         UnityWebRequest req = UnityWebRequest.Post(URL, FormData);
-        yield return req.Send();
+		AsyncOperation requestAsync = req.Send();
+
+		// 產生 Prograss
+		while (!requestAsync.isDone) 
+		{
+			Debug.Log ("Prograss => " + req.uploadProgress.ToString());
+			yield return new WaitForSeconds (1);
+		}
         Debug.Log(req.downloadHandler.text);
     }
 }

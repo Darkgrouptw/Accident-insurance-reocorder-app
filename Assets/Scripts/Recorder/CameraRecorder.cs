@@ -19,6 +19,7 @@ public class CameraRecorder : MonoBehaviour
 
 	private bool IsRepeat = false;
     private int CountSaveIndex = 0;
+	private bool IsInit = true;
 
 	private Coroutine RecordCoroutine;
     private void Start()
@@ -33,7 +34,7 @@ public class CameraRecorder : MonoBehaviour
         // 創建 Texture
 		recorder = new WebCamTexture(Screen.height / 4, Screen.width / 4);
         image.texture = recorder;
-        recorder.Play();
+		recorder.Play();
 
         if(recorder.isPlaying)
 		    RecordCoroutine = StartCoroutine(RecordEvent());
@@ -48,15 +49,29 @@ public class CameraRecorder : MonoBehaviour
 	{
 		while (true) 
 		{
+			// 初始化相機，要等一下
+			while (recorder.width < 50 && recorder.height < 50) 
+			{
+				yield return new WaitForSeconds (0.1f);
+			}
+
 			// 清空記憶體
 			if(CountSaveIndex % frameNumber == 0)
 				System.GC.Collect();
+
+			// 測試相機大小
+			if (IsInit) 
+			{
+				IsInit = false;
+				Debug.Log ("Width => " + recorder.width);
+				Debug.Log ("Height => " + recorder.height);
+			}
 			
 			Texture2D textureTemp = new Texture2D(recorder.width, recorder.height);
 			textureTemp.SetPixels (recorder.GetPixels ());
 			textureTemp.Apply ();
 
-			byte[] dataArray = textureTemp.EncodeToPNG();
+			byte[] dataArray = textureTemp.EncodeToJPG();
 			string OutputName = FinalPath + "/";
 			OutputName += string.Format ("{0:0000}", CountSaveIndex);
 			System.IO.File.WriteAllBytes(OutputName + ".jpg", dataArray);
