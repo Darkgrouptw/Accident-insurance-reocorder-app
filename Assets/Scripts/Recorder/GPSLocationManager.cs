@@ -65,6 +65,11 @@ public class GPSLocationManager : MonoBehaviour
                 // 送出表單
                 UnityWebRequest req = UnityWebRequest.Post(URL, UserLocationData);
                 req.Send();
+
+				// 要讓他結束後才跑
+				while (!req.isDone) {
+					yield return new WaitForSeconds (0.1f);
+				};
                 Debug.Log(req.downloadHandler.text);
 
                 yield return new WaitForSeconds(20);
