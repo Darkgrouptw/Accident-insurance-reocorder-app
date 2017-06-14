@@ -24,6 +24,14 @@ public class PolicyButtonEvent : MonoBehaviour
             CarInfoField.text = "AD1235";
             PolicyTypeField.text = "第三責任險";
         }
+        else if(AccountName == "abcd")
+        {
+            NameField.text = "林先生";
+            NameField1.text = "林先生";
+            NIDField.text = "A112233445";
+            CarInfoField.text = "WW5487";
+            PolicyTypeField.text = "第三責任險";
+        }
     }
 
     public void SubmitButtonPressEvent()

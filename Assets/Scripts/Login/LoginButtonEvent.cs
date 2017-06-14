@@ -9,11 +9,19 @@ public class LoginButtonEvent : MonoBehaviour
     public InputField AccountField;
     public InputField PasswordField;
 
-    // 預測帳密
+    // 預測帳密，快速登入
     public void TestButtonPressEvent()
     {
-        AccountField.text = "abc";
-        PasswordField.text = "123";
+        if(AccountField.text != "abc")
+        {
+            AccountField.text = "abc";
+            PasswordField.text = "123";
+        }
+        else
+        {
+            AccountField.text = "abcd";
+            PasswordField.text = "1234";
+        }
     }
 
     public void LoginButtonPressEvent()
