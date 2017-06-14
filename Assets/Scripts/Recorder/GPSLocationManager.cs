@@ -10,6 +10,7 @@ public class GPSLocationManager : MonoBehaviour
     [Header("========== GPS 記錄相關 ==========")]
     public string URL = "http://140.118.9.179/userLocation/";
 
+	public GameObject HelpPanel;
     public RawImage LoadingTexture;
     public MovieTexture LoadingMovie;
 
@@ -86,7 +87,7 @@ public class GPSLocationManager : MonoBehaviour
                 {
                     // 發現有人需要幫忙，要傳送影片，先顯示視窗
                     Debug.Log("HelpID => " + DataList["helpID"]);
-                    
+					HelpPanel.SetActive (true);
                 }
 
                 yield return new WaitForSeconds(20);
