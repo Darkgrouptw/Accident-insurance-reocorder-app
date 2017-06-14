@@ -1,10 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class GPSLocationManager : MonoBehaviour
 {
-    private IEnumerator Start()
+    [Header("========== GPS 記錄相關 ==========")]
+    public string URL = "http://140.118.9.179/userLocation/";
+
+    private void Start()
+    {
+        StartCoroutine(GPSRecord());
+    }
+
+    private IEnumerator GPSRecord()
     {
         // 開始定位
         Input.location.Start();
@@ -40,9 +49,24 @@ public class GPSLocationManager : MonoBehaviour
             //print("Location: " + Input.location.lastData.latitude + " " + Input.location.lastData.longitude + " " + Input.location.lastData.altitude + " " + Input.location.lastData.horizontalAccuracy + " " + Input.location.lastData.timestamp);
             while(true)
             {
-                PlayerPrefs.SetFloat("lat", Input.location.lastData.latitude);
-                PlayerPrefs.SetFloat("long", Input.location.lastData.longitude);
-				Debug.Log ("Location => " + Input.location.lastData.latitude + "," + Input.location.lastData.longitude);
+                // 設定到背景裡面
+                float laitude = Input.location.lastData.latitude;
+                float longitude = Input.location.lastData.longitude;
+                PlayerPrefs.SetFloat("lat", laitude);
+                PlayerPrefs.SetFloat("long", longitude);
+				Debug.Log ("Location => " + laitude + "," + longitude);
+
+                // 填寫表單上去
+                WWWForm UserLocationData = new WWWForm();
+                UserLocationData.AddField("userID", "身分證字號");
+                UserLocationData.AddField("lat", laitude.ToString());
+                UserLocationData.AddField("lng", longitude.ToString());
+
+                // 送出表單
+                UnityWebRequest req = UnityWebRequest.Post(URL, UserLocationData);
+                req.Send();
+                Debug.Log(req.downloadHandler.text);
+
                 yield return new WaitForSeconds(20);
             }
         }
