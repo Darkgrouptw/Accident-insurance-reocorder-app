@@ -11,9 +11,6 @@ public class UploadManager : MonoBehaviour
     public string URL = "http://140.118.9.179/newEvents/";
     private string FinalPath;
 
-    [Header("========== 測試的 UI ==========")]
-    public Text Status;
-
     private void Start()
     {
         // 路徑
@@ -67,12 +64,10 @@ public class UploadManager : MonoBehaviour
 				HandleIndex++;
             }
         }
-        Status.text = "Zip file";
 
         // 壓縮
         string exportZipPath = FinalPath + "Temp/Video.zip";
         ZipUtil.Zip(exportZipPath, ZipFileList.ToArray());
-        Status.text = "Zip Complete\n" + Status.text;
 
         // 產生保單的 txt
         string PolicyData = "";
