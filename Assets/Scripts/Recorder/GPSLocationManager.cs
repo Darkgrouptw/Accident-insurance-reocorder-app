@@ -76,14 +76,18 @@ public class GPSLocationManager : MonoBehaviour
 					yield return new WaitForSeconds (0.1f);
 				};
                 Dictionary<string, string> DataList = JsonParser(req.downloadHandler.text);
+
                 if(DataList["help"] == "true")
                 {
-                    // 發現有人需要幫忙，要傳送影片，先顯示視窗
-                    Debug.Log("HelpID => " + DataList["helpID"]);
-                    PlayerPrefs.SetString("helpID", DataList["helpID"]);
-                    PlayerPrefs.Save();
+					if (IsMissID (DataList ["helpID"])) 
+					{
+						// 發現有人需要幫忙，要傳送影片，先顯示視窗
+						Debug.Log("HelpID => " + DataList["helpID"]);
+						PlayerPrefs.SetString("helpID", DataList["helpID"]);
+						PlayerPrefs.Save();
 
-                    HelpPanel.SetActive(true);
+						HelpPanel.SetActive(true);
+					}
                 }
 
                 yield return new WaitForSeconds(20);
@@ -108,7 +112,7 @@ public class GPSLocationManager : MonoBehaviour
         {
             // 切開:
             string[] DataPart = DataSplit[i].Split(':');
-            if(DataPart[0] == "helpID")
+			if(DataPart[0] == "helpID" && DataPart[1] != "false")
             {
                 DataList.Add(DataPart[0], DataPart[2]);
                 break;
@@ -123,4 +127,28 @@ public class GPSLocationManager : MonoBehaviour
         // 停止定位
         Input.location.Stop();
     }
+
+	private bool IsMissID(string MissID)
+	{
+		bool IsAppearBefore = false;
+		string MissTotalString = PlayerPrefs.GetString ("MissID", "");
+		string[] DataPart = MissTotalString.Split (',');
+		for (int i = 0; i < DataPart.Length; i++)
+			if (MissID == DataPart [i]) 
+			{
+				IsAppearBefore = true;
+				break;
+			}
+
+		if (!IsAppearBefore) 
+		{
+			if(MissTotalString != "")
+				MissTotalString += ",";
+			MissTotalString += MissID;
+		}
+
+		PlayerPrefs.SetString ("MissID", MissTotalString);
+		PlayerPrefs.Save ();
+		return !IsAppearBefore;
+	}
 }
