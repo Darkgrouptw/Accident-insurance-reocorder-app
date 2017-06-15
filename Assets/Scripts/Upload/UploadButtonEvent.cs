@@ -19,13 +19,16 @@ public class UploadButtonEvent : MonoBehaviour
         int number = int.Parse(DownImage.GetComponentInParent<Transform>().gameObject.name.Replace("Check Step ", ""));
         DownImage.SetActive(!DownImage.activeInHierarchy);
         PressBool[number - 1] = DownImage.activeInHierarchy;
+		CheckIfAllTrue ();
     }
 
     public void CheckIfAllTrue()
     {
-        for (int i = 0; i < PressBool.Length; i++)
-            if (!PressBool[i])
-                return;
+		for (int i = 0; i < PressBool.Length; i++)
+			if (!PressBool [i]) {
+				Debug.Log (i);
+				return;
+			}
         FinishBlock.SetActive(true);
     }
 }
