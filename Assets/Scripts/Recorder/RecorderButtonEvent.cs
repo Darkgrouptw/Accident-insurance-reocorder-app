@@ -30,7 +30,6 @@ public class RecorderButtonEvent : MonoBehaviour
         // 圖片名稱重新歸檔
         int EndIndex = PlayerPrefs.GetInt("CountSaveIndex");
         bool IsRepeat = PlayerPrefs.GetInt("IsRepeat") == 1 ? true : false;
-        int StartIndex = 0;
 
         // 上傳資訊
         string helpID = PlayerPrefs.GetString("helpID");
